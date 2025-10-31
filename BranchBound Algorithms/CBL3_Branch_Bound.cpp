@@ -5,19 +5,19 @@
 typedef struct {
 	char ten[25];
 	float TL, GT, DG;
-	int PA, SL;
+	int PA;
 }Dovat;
 
 Dovat* readData(float * W, int* size) {
 	FILE *f;
-	f = fopen("CBL2.txt", "r");
+	f = fopen("CBL3.txt", "r");
 	int i = 0;
 	Dovat* dsdv = (Dovat*)malloc(sizeof(Dovat));
 	
 	if (f!= NULL) {
 		fscanf(f, "%f", W);
 		
-		while (fscanf(f, "%f %f %d %[^\n]", &dsdv[i].TL, &dsdv[i].GT, &dsdv[i].SL, dsdv[i].ten) == 4) {
+		while (fscanf(f, "%f %f %[^\n]", &dsdv[i].TL, &dsdv[i].GT, dsdv[i].ten) == 3) {
 		    dsdv[i].DG = dsdv[i].GT / dsdv[i].TL;
 		    dsdv[i].PA = 0;
 		    i++;
@@ -73,7 +73,7 @@ int min(int a, int b) {
 void branchBound(Dovat arr[], int size, int indexDoVat, float* W, float* TGT, float* CT, float* GLNTT, int tmp[]) {
 	
 	int xk = *W/arr[indexDoVat].TL;
-	xk = min(xk, arr[indexDoVat].SL);
+	xk = min(xk, 1);
 	
 	for (int i = xk; i >= 0; i--) {
 		// tinh gia tri cho nut trong
@@ -100,18 +100,18 @@ void branchBound(Dovat arr[], int size, int indexDoVat, float* W, float* TGT, fl
 }
 
 void printScreen(Dovat arr[], int size, float w) {
-	printf("Bai toan CLB2 dung NHANH CAN\n");
-	printf("|---|-------------------------|---------|---------|---------|----------|\n");
-	printf("|%-3s|%-25s|%-9s|%-9s|%-9s|%-10s|\n", "STT", "        Ten do vat       ", "Gia tri", "So luong", "Phuong An", "Tong GT");
-	printf("|---|-------------------------|---------|---------|---------|----------|\n");	
+	printf("Bai toan CLB3 dung NHANH CAN\n");
+	printf("|---|-------------------------|---------|---------|----------|\n");
+	printf("|%-3s|%-25s|%-9s|%-9s|%-10s|\n", "STT", "        Ten do vat       ", "Gia tri", "Phuong An", "Tong GT");
+	printf("|---|-------------------------|---------|---------|----------|\n");	
 	int trongLuong = 0;
 	float TGT = 0;
 	for (int i = 0; i < size; i++) {
 		trongLuong += arr[i].TL*arr[i].PA;
 		TGT += arr[i].GT*arr[i].PA;
-		printf("|%-3d|%-25s|%-9.2f|%-9d|%-9d|%-10.2f|\n", i+1, arr[i].ten, arr[i].GT, arr[i].SL, arr[i].PA, arr[i].GT*arr[i].PA);
+		printf("|%-3d|%-25s|%-9.2f|%-9d|%-10.2f|\n", i+1, arr[i].ten, arr[i].GT, arr[i].PA, arr[i].GT*arr[i].PA);
 	}
-	printf("|---|-------------------------|---------|---------|---------|----------|\n");
+	printf("|---|-------------------------|---------|---------|----------|\n");
 	printf("Tong trong luong balo: %d\n", trongLuong);
 	printf("Tong gia tri balo: %.2f", TGT);
 }
