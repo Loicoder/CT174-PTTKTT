@@ -10,18 +10,20 @@ typedef struct {
 
 Dovat* readData(float * W, int* size) {
 	FILE *f;
-	f = fopen("CBL1.txt", "r");
+	f = fopen("CBL2.txt", "r");
 	int i = 0;
 	Dovat* dsdv = (Dovat*)malloc(sizeof(Dovat));
 	
 	if (f!= NULL) {
 		fscanf(f, "%f", W);
-		while (fscanf(f, "%f %f %d %[^\n]", &dsdv[i].TL, &dsdv[i].GT, &dsdv[i].SL, dsdv[i].ten) == 3) {
+		
+		while (fscanf(f, "%f %f %d %[^\n]", &dsdv[i].TL, &dsdv[i].GT, &dsdv[i].SL, dsdv[i].ten) == 4) {
 		    dsdv[i].DG = dsdv[i].GT / dsdv[i].TL;
 		    dsdv[i].PA = 0;
 		    i++;
 		    dsdv = (Dovat*)realloc(dsdv, sizeof(Dovat) * (i + 1));
 		}	
+		
 	}
 	else {
 		printf("Loi doc file du lieu!");
@@ -98,18 +100,18 @@ void branchBound(Dovat arr[], int size, int indexDoVat, float* W, float* TGT, fl
 }
 
 void printScreen(Dovat arr[], int size, float w) {
-	printf("Bai toan CLB1 dung NHANH CAN\n");
-	printf("|---|-------------------------|---------|---------|----------|\n");
-	printf("|%-3s|%-25s|%-9s|%-9s|%-10s|\n", "STT", "        Ten do vat       ", "Gia tri", "Phuong An", "Tong GT");
-	printf("|---|-------------------------|---------|---------|----------|\n");	
+	printf("Bai toan CLB2 dung NHANH CAN\n");
+	printf("|---|-------------------------|---------|---------|---------|----------|\n");
+	printf("|%-3s|%-25s|%-9s|%-9s|%-9s|%-10s|\n", "STT", "        Ten do vat       ", "Gia tri", "So luong", "Phuong An", "Tong GT");
+	printf("|---|-------------------------|---------|---------|---------|----------|\n");	
 	int trongLuong = 0;
 	float TGT = 0;
 	for (int i = 0; i < size; i++) {
 		trongLuong += arr[i].TL*arr[i].PA;
 		TGT += arr[i].GT*arr[i].PA;
-		printf("|%-3d|%-25s|%-9.2f|%-9d|%-10.2f|\n", i+1, arr[i].ten, arr[i].GT, arr[i].PA, arr[i].GT*arr[i].PA);
+		printf("|%-3d|%-25s|%-9.2f|%-9d|%-9d|%-10.2f|\n", i+1, arr[i].ten, arr[i].GT, arr[i].SL, arr[i].PA, arr[i].GT*arr[i].PA);
 	}
-	printf("|---|-------------------------|---------|---------|----------|\n");
+	printf("|---|-------------------------|---------|---------|---------|----------|\n");
 	printf("Tong trong luong balo: %d\n", trongLuong);
 	printf("Tong gia tri balo: %.2f", TGT);
 }
