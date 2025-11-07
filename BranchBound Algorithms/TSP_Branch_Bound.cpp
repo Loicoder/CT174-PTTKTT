@@ -60,6 +60,7 @@ bool isCircle(Line tmp[], int city, int next) {
 		}
 		else index++;
 	}
+	
 	return res;
 }
 
@@ -76,7 +77,8 @@ void updateRes(Line arr[][size], int n, float TGT, float *GNNTT, Line tmp[], Lin
 }
 
 void Branch_Bound(Line arr[][size], int n, int city, int current_city, float* TGT, float* CD, float* GNNTT, Line tmp[], Line res[]) {
-	for (int j = 0; j < n; j++) 
+	for (int j = 0; j < n; j++) {
+		
 		if (current_city != j && arr[current_city][j].is_used == false && isCircle(tmp, city, j)==false) {
 			*TGT = *TGT + arr[current_city][j].length;
 			*CD = *TGT + (n-city)*minLine(arr, n);
@@ -99,7 +101,7 @@ void Branch_Bound(Line arr[][size], int n, int city, int current_city, float* TG
 			arr[j][current_city].is_used = false;
 			// khong can tinh lai can duoi vi no khong anh huong toi nut tiep theo
 		}
-		
+	}
 	
 } 
 
@@ -125,16 +127,31 @@ int main() {
 	readFile(arr, &n);
 	Line res[n];
 	Line tmp[n];
-	char start_city;
+	char start_city, again;
 	
 	// in ma tran da doc ra man hinh
 	printMartrix(arr, n);
 	
-	// nhanh can
-	float TGT = 0, CD = 0, GNNTT = 3.40282e+38;
-	Branch_Bound(arr, n, 0, start_city - 'a', &TGT, &CD, &GNNTT, tmp, res);
-	
-	// in ket qua ra man hinh
-	printScreen(res, GNNTT, n);
+	// vong lap cho den khi nao nguoi dung muon dung
+	do {
+		fflush(stdin); // don sach bo nho dem
+		
+		// nhap thanh pho bat dau
+		printf("Nhap diem xuat phat (a->%c): ", n-1+'a');
+		scanf("%c", &start_city);
+		
+		// nhanh can
+		float TGT = 0, CD = 0, GNNTT = 3.40282e+38;
+		Branch_Bound(arr, n, 0, start_city - 'a', &TGT, &CD, &GNNTT, tmp, res);
+		
+		// in ket qua ra man hinh
+		printScreen(res, GNNTT, n);
+		
+		// tiep tuc hay dung chuong trinh
+		fflush(stdin);
+		printf("\nTiep tuc?(y/n): ");
+		scanf("%c", &again);
+	}	
+	while (again == 'y' || again == 'Y');
 	return 0;
 }
